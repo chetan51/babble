@@ -43,9 +43,6 @@ if (Meteor.is_client)
   Template.message.id_editable = ->
     if is_editable(this) then "editable" else ''
   
-  Template.message.class_visible = ->
-    if (is_mine(this) or (this.text and this.text.length)) then "visible" else "hidden"
-   
   Template.message.class_incomplete = ->
     if this.incomplete then "incomplete" else ''
   
@@ -61,7 +58,10 @@ if (Meteor.is_client)
    
   Template.message.events = {
     'keydown textarea': (event) ->
+      input = $(event.target)
       code = if event.keyCode then event.keyCode else event.which
+      updated = false
+      
       if (code == 13) # Enter was pressed
         # Mark message as complete
         Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
@@ -69,6 +69,13 @@ if (Meteor.is_client)
         # Create new incomplete message
         create_new_message()
         
+        updated = true
+      else if input.val().length == 0
+          # This is the first character, so update the timestamp
+          Messages.update(this._id, {$set: {time: Date.now()}})
+          updated = true
+      
+      if updated
         # Focus on new message after it has been rendered
         delay 50, ->
           focus_editable()
