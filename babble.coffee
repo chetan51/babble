@@ -19,6 +19,14 @@ if (Meteor.is_client)
   Meteor.startup ->
     focus_name_prompt()
   
+  ensure_instructional_message = ->
+    if (Messages.find({chat: Session.get("current_chat_name")}).count() == 0)
+      Messages.insert({
+        name: "babble",
+        text: "hey! welcome to real-time chat. share the link to this page to a friend, and when they join, you'll be able to see each other typing. have fun!",
+        incomplete: false, time: Date.now() - 10, chat: Session.get("current_chat_name")
+      })
+
   create_new_message = ->
     Messages.insert({
       name: Session.get("my_name"),
@@ -62,6 +70,7 @@ if (Meteor.is_client)
       update_name()
       update_current_chat(chat_name)
       update_url(chat_name)
+      ensure_instructional_message()
       ensure_editable_message()
      
     'click .private': (event) ->
@@ -69,6 +78,7 @@ if (Meteor.is_client)
       update_name()
       update_current_chat(chat_name)
       update_url(chat_name)
+      ensure_instructional_message()
       ensure_editable_message()
      
     'keydown input[type="text"]': (event) ->
@@ -77,6 +87,7 @@ if (Meteor.is_client)
       
       if (code == 13) # Enter was pressed
         update_name()
+        ensure_instructional_message()
         ensure_editable_message()
   }
   
@@ -148,13 +159,6 @@ if (Meteor.is_server)
   Meteor.startup ->
     if (Chats.find().count() == 0)
       Chats.insert({name: "public", created: Date.now()})
-     
-    if (Messages.find().count() == 0)
-      Messages.insert({
-        name: "babble",
-        text: "hey! welcome to real-time chat. share the link to this page to a friend, and when they join, you'll be able to see each other typing. have fun!",
-        incomplete: false, time: Date.now() - 10
-      })
  
 # Helpers
 delay = (time, fn) ->
