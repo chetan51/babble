@@ -5,6 +5,9 @@ Messages = new Meteor.Collection("messages")
 if (Meteor.is_client)
   window.Messages = Messages
   
+  Meteor.startup ->
+    $("#name-prompt input").focus()
+  
   create_new_message = ->
     Messages.insert({
       name: Session.get("my_name"),
@@ -19,9 +22,15 @@ if (Meteor.is_client)
       code = if event.keyCode then event.keyCode else event.which
       if (code == 13) # Enter was pressed
         input = $(event.target)
+        
         Session.set("my_name", input.val())
+        
         if not Messages.find({name: Session.get("my_name"), incomplete: true}).count()
           create_new_message()
+         
+        # Focus on editable message after it has been rendered
+        delay 50, ->
+          focus_editable()
   }
   
   Template.chat.class_visible = ->
