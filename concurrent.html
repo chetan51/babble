@@ -17,11 +17,11 @@
 </template>
 
 <template name="message">
-  <div class="message{{incomplete}}{{which_side}}{{color}}">
+  <div class="message{{class_incomplete}}{{class_side}}{{class_color}}" id="{{id_editable}}">
     <div class="name">{{name}}</div>
     <div class="content">
       {{#if editable}}
-        <textarea class="text">{{text}}</textarea>
+      <textarea class="text" id="input-{{_id}}">{{text}}</textarea>
       {{else}}
         <span class="text">{{text}}</span>
       {{/if}}
