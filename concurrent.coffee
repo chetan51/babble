@@ -34,7 +34,7 @@ if (Meteor.is_client)
   Template.message.events = {
     'keydown textarea': (event) ->
       code = if event.keyCode then event.keyCode else event.which
-      if (code == 13) # enter was pressed
+      if (code == 13) # Enter was pressed
         # Mark message as complete
         Messages.update(this._id, {$set: {incomplete: false}})
         
@@ -47,9 +47,10 @@ if (Meteor.is_client)
         # Focus on new message after it has been rendered
         delay 50, ->
           focus_editable()
-      else
-        input = $(event.target)
-        Messages.update(this._id, {$set: {text: input.val()}})
+      
+    'keyup textarea': (event) ->
+      input = $(event.target)
+      Messages.update(this._id, {$set: {text: input.val()}})
   }
   
   Session.set("my_name", "john") # for debugging
