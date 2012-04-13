@@ -94,7 +94,7 @@ if (Meteor.is_server)
   Meteor.startup ->
     if (Messages.find().count() == 0)
       Messages.insert({
-        name: "concurrent",
+        name: "babble",
         text: "hey! welcome to real-time chat. share the link to this page to a friend, and when they join, you'll be able to see each other typing. have fun!",
         incomplete: false, time: Date.now() - 10
       })
