@@ -64,22 +64,21 @@ if (Meteor.is_client)
       delay 50, ->
         focus_editable()
 
+  join_chat = (chat_name) ->
+    update_name()
+    update_current_chat(chat_name)
+    update_url(chat_name)
+    ensure_instructional_message()
+    ensure_editable_message()
+
   Template.name_prompt.events = {
     'click .public': (event) ->
       chat_name = "public"
-      update_name()
-      update_current_chat(chat_name)
-      update_url(chat_name)
-      ensure_instructional_message()
-      ensure_editable_message()
+      join_chat(chat_name)
      
     'click .private': (event) ->
       chat_name = uniqueID()
-      update_name()
-      update_current_chat(chat_name)
-      update_url(chat_name)
-      ensure_instructional_message()
-      ensure_editable_message()
+      join_chat(chat_name)
      
     'keydown input[type="text"]': (event) ->
       input = $(event.target)
