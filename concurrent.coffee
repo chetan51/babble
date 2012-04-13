@@ -1,5 +1,7 @@
+# Models
 Messages = new Meteor.Collection("messages")
 
+# Client
 if (Meteor.is_client)
   window.Messages = Messages
   
@@ -87,7 +89,7 @@ if (Meteor.is_client)
   
   focus_editable()
 
-
+# Server
 if (Meteor.is_server)
   Meteor.startup ->
     if (Messages.find().count() == 0)
@@ -96,7 +98,13 @@ if (Meteor.is_server)
         text: "hey! welcome to real-time chat. share the link to this page to a friend, and when they join, you'll be able to see each other typing. have fun!",
         incomplete: false, time: Date.now() - 10
       })
-
+ 
 # Helpers
 delay = (time, fn) ->
   setTimeout fn, time
+
+uniqueID = (length=8) ->
+  id = ""
+  id += Math.random().toString(36).substr(2) while id.length < length
+  id.substr 0, length
+ 
