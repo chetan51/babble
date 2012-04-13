@@ -7,7 +7,7 @@ if (Meteor.is_client)
     return Messages.find()
   
   Template.message.complete = ->
-    return this.complete ? " complete" : ''
+    return if this.complete then " complete" else ''
   
   Template.message.editing = ->
     return true
