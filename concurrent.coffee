@@ -3,18 +3,20 @@ Messages = new Meteor.Collection("messages")
 if (Meteor.is_client)
   window.Messages = Messages
   
+  Session.set("my_name", "john") # for debugging
+  
   Template.chat.messages = ->
     Messages.find()
   
   Template.message.incomplete = ->
     if this.incomplete then " incomplete" else ''
   
-  Template.message.editing = ->
-    true
-  
   is_mine = (message) ->
-    message.name == "john"
+    message.name == Session.get("my_name")
     
+  Template.message.editable = ->
+    is_mine(this)
+  
   Template.message.which_side = ->
     if is_mine(this) then " right" else " left"
     
