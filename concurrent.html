@@ -1,15 +1,28 @@
 <head>
-  <title>concurrent</title>
+  <title>concurrent: real-time chat</title>
 </head>
 
 <body>
-  {{> hello}}
+  <div id="container">
+    {{> chat}}
+  </div>
 </body>
 
-<template name="hello">
-  <div class="hello">
-    <h1>Hello World!</h1>
-    {{greeting}}
-    <input type="button" value="Click" />
+<template name="chat">
+  <div id="chat">
+    {{#each messages}}
+      {{> message}} 
+    {{/each}}
+  </div>
+</template>
+
+<template name="message">
+  <div class="message{{complete}}">
+    <span class="name">{{name}}</span>:
+    {{#if editing}}
+      <input class="text" type="text" value="{{text}}"></input>
+    {{else}}
+      <span class="text">{{text}}</span>
+    {{/if}}
   </div>
 </template>

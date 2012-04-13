@@ -1,1 +1,5 @@
 /* CSS declarations go here */
+
+.message.complete {
+  color: blue;
+}
