@@ -1,10 +1,8 @@
 # Models
-Chats    = new Meteor.Collection("chats")
 Messages = new Meteor.Collection("messages")
 
 # Client
 if (Meteor.is_client)
-  window.Chats    = Chats
   window.Messages = Messages
   
   $(window).bind "popstate", (event) ->
@@ -153,12 +151,6 @@ if (Meteor.is_client)
       Messages.update(this._id, {$set: {text: input.val()}})
   }
 
-# Server
-if (Meteor.is_server)
-  Meteor.startup ->
-    if (Chats.find().count() == 0)
-      Chats.insert({name: "public", created: Date.now()})
- 
 # Helpers
 delay = (time, fn) ->
   setTimeout fn, time
