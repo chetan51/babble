@@ -26,6 +26,13 @@
         <span class="text">{{text}}</span>
       {{/if}}
     </div>
-    <div class="time">{{time}}</div>
+    <div class="time">
+      {{#if incomplete}}
+        started at
+      {{else}}
+        sent at
+      {{/if}}
+      {{timestamp}}
+    </div>
   </div>
 </template>

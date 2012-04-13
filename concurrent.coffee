@@ -4,7 +4,7 @@ if (Meteor.is_client)
   window.Messages = Messages
   
   Template.chat.messages = ->
-    Messages.find()
+    Messages.find({}, {sort: {time:1}})
   
   is_mine = (message) ->
     message.name == Session.get("my_name")
@@ -13,7 +13,6 @@ if (Meteor.is_client)
     is_mine(message) and message.incomplete
    
   focus_editable = ->
-    console.log $("#editable textarea")
     $("#editable textarea").focus()
 
   Template.message.editable = ->
@@ -31,17 +30,21 @@ if (Meteor.is_client)
   Template.message.class_color = ->
     if is_mine(this) then " grey" else " blue"
     
+  Template.message.timestamp = ->
+    d = new Date(this.time)
+    d.toTimeString()
+   
   Template.message.events = {
     'keydown textarea': (event) ->
       code = if event.keyCode then event.keyCode else event.which
       if (code == 13) # Enter was pressed
         # Mark message as complete
-        Messages.update(this._id, {$set: {incomplete: false}})
+        Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
         
         # Create new incomplete message
         Messages.insert({
           name: Session.get("my_name"),
-          incomplete: true
+          incomplete: true, time: Date.now()
         })
         
         # Focus on new message after it has been rendered
@@ -63,22 +66,22 @@ if (Meteor.is_server)
       Messages.insert({
         name: "john",
         text: "hey!",
-        incomplete: false, time: "3:13p"
+        incomplete: false, time: Date.now() - (5 * 60 * 1000)
       })
       Messages.insert({
         name: "lisa",
         text: "how's it going?",
-        incomplete: false, time: "3:13p"
+        incomplete: false, time: Date.now() - (4 * 60 * 1000)
       })
       Messages.insert({
         name: "john",
         text: "it's good, yo",
-        incomplete: true, time: "3:14p"
+        incomplete: true, time: Date.now() - (2 * 60 * 1000)
       })
       Messages.insert({
         name: "lisa",
         text: "i heard you got into th",
-        incomplete: true, time: "3:14p"
+        incomplete: true, time: Date.now() - (1 * 60 * 1000)
       })
 
 # Helpers
