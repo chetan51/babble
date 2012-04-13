@@ -55,6 +55,7 @@ body {
     margin: 1px;
     font-size: 16px;
     color: #333;
+    min-height: 18px;
      
     textarea {
       width: 100%;
@@ -72,6 +73,13 @@ body {
   
   margin-bottom: 5px;
   width: 75%;
+  
+  &.visible {
+    display: block;
+  }
+  &.hidden {
+    display: none;
+  }    
   
   &.incomplete {
     .content {

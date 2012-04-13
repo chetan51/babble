@@ -10,7 +10,7 @@ if (Meteor.is_client)
     })
   
   Template.name_prompt.class_visible = ->
-    if Session.get("my_name") then " hidden" else " visible"
+    if Session.get("my_name") then "hidden" else "visible"
    
   Template.name_prompt.events = {
     'keydown input': (event) ->
@@ -23,7 +23,7 @@ if (Meteor.is_client)
   }
   
   Template.chat.class_visible = ->
-    if Session.get("my_name") then " visible" else " hidden"
+    if Session.get("my_name") then "visible" else "hidden"
   
   Template.chat.messages = ->
     Messages.find({}, {sort: {time:1}})
@@ -43,14 +43,17 @@ if (Meteor.is_client)
   Template.message.id_editable = ->
     if is_editable(this) then "editable" else ''
   
+  Template.message.class_visible = ->
+    if (is_mine(this) or (this.text and this.text.length)) then "visible" else "hidden"
+   
   Template.message.class_incomplete = ->
-    if this.incomplete then " incomplete" else ''
+    if this.incomplete then "incomplete" else ''
   
   Template.message.class_side = ->
-    if is_mine(this) then " right" else " left"
+    if is_mine(this) then "right" else "left"
     
   Template.message.class_color = ->
-    if is_mine(this) then " grey" else " blue"
+    if is_mine(this) then "grey" else "blue"
     
   Template.message.timestamp = ->
     d = new Date(this.time)
@@ -82,24 +85,9 @@ if (Meteor.is_server)
   Meteor.startup ->
     if (Messages.find().count() == 0)
       Messages.insert({
-        name: "john",
-        text: "hey!",
-        incomplete: false, time: Date.now() - (5 * 60 * 1000)
-      })
-      Messages.insert({
-        name: "lisa",
-        text: "how's it going?",
-        incomplete: false, time: Date.now() - (4 * 60 * 1000)
-      })
-      Messages.insert({
-        name: "john",
-        text: "it's good, yo",
-        incomplete: true, time: Date.now() - (2 * 60 * 1000)
-      })
-      Messages.insert({
-        name: "lisa",
-        text: "i heard you got into th",
-        incomplete: true, time: Date.now() - (1 * 60 * 1000)
+        name: "concurrent",
+        text: "hey! welcome to real-time chat. share the link to this page to a friend, and when they join, you'll be able to see each other typing. have fun!",
+        incomplete: false, time: Date.now() - 10
       })
 
 # Helpers
