@@ -18,11 +18,26 @@ body {
   text-align: center;
   font-size: 24px;
   
-  input {
+  input[type="text"] {
     font-size: inherit;
     font: inherit;
     width: 200px;
   }
+  
+  .buttons {
+    margin-top: 10px;
+    
+    .label {
+      font-size: 18px;
+    }
+    
+    &.visible {
+      display: block;
+    }
+    &.hidden {
+      display: none;
+    }    
+  } 
 }
 
 #chat, #name-prompt {

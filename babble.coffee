@@ -1,43 +1,90 @@
 # Models
+Chats    = new Meteor.Collection("chats")
 Messages = new Meteor.Collection("messages")
 
 # Client
 if (Meteor.is_client)
+  window.Chats    = Chats
   window.Messages = Messages
   
-  Meteor.startup ->
+  $(window).bind "popstate", (event) ->
+    chat_name = location.pathname.substr(1) # get rid of leading /
+    update_current_chat(chat_name)
+    delay 50, ->
+      focus_name_prompt()
+  
+  focus_name_prompt = ->
     $("#name-prompt input").focus()
+
+  Meteor.startup ->
+    focus_name_prompt()
   
   create_new_message = ->
     Messages.insert({
       name: Session.get("my_name"),
-      incomplete: true, time: Date.now()
+      incomplete: true, time: Date.now(), chat: Session.get("current_chat_name")
     })
   
   Template.name_prompt.class_visible = ->
     if Session.get("my_name") then "hidden" else "visible"
+    
+  Template.name_prompt.class_buttons_visible = ->
+    if Session.get("current_chat_name") then "hidden" else "visible"
    
+  update_name = ->
+    my_name = $("#name-prompt input[type='text']").val()
+    if my_name.length
+      Session.set("my_name", my_name)
+   
+  update_current_chat = (chat_name) ->
+    if chat_name.length
+      Session.set("current_chat_name", chat_name)
+
+  update_url = (chat_name) ->
+    window.history.pushState(null, null, "/" + chat_name);
+    
+  ensure_editable_message = ->
+    if Session.get("current_chat_name") and Session.get("my_name")
+      if not Messages.find({
+        name: Session.get("my_name"),
+        incomplete: true,
+        chat: Session.get("current_chat_name")
+      }).count()
+        create_new_message()
+       
+      #Focus on editable message after it has been rendered
+      delay 50, ->
+        focus_editable()
+
   Template.name_prompt.events = {
-    'keydown input': (event) ->
+    'click .public': (event) ->
+      chat_name = "public"
+      update_name()
+      update_current_chat(chat_name)
+      update_url(chat_name)
+      ensure_editable_message()
+     
+    'click .private': (event) ->
+      chat_name = uniqueID()
+      update_name()
+      update_current_chat(chat_name)
+      update_url(chat_name)
+      ensure_editable_message()
+     
+    'keydown input[type="text"]': (event) ->
+      input = $(event.target)
       code = if event.keyCode then event.keyCode else event.which
+      
       if (code == 13) # Enter was pressed
-        input = $(event.target)
-        
-        Session.set("my_name", input.val())
-        
-        if not Messages.find({name: Session.get("my_name"), incomplete: true}).count()
-          create_new_message()
-         
-        # Focus on editable message after it has been rendered
-        delay 50, ->
-          focus_editable()
+        update_name()
+        ensure_editable_message()
   }
   
   Template.chat.class_visible = ->
     if Session.get("my_name") then "visible" else "hidden"
   
   Template.chat.messages = ->
-    Messages.find({}, {sort: {time:1}})
+    Messages.find({chat: Session.get("current_chat_name")}, {sort: {time:1}})
   
   is_mine = (message) ->
     message.name == Session.get("my_name")
@@ -95,12 +142,13 @@ if (Meteor.is_client)
       input = $(event.target)
       Messages.update(this._id, {$set: {text: input.val()}})
   }
-  
-  focus_editable()
 
 # Server
 if (Meteor.is_server)
   Meteor.startup ->
+    if (Chats.find().count() == 0)
+      Chats.insert({name: "public", created: Date.now()})
+     
     if (Messages.find().count() == 0)
       Messages.insert({
         name: "babble",
