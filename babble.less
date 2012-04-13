@@ -19,25 +19,54 @@ body {
   font-size: 24px;
   
   input[type="text"] {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #555;
+    resize: none;
+    outline: none;
     font-size: inherit;
     font: inherit;
-    width: 200px;
+    width: 150px;
   }
   
   .buttons {
-    margin-top: 10px;
+    margin-top: 20px;
     
     .label {
-      font-size: 18px;
+      font-size: 16px;
     }
     
+    button {
+      background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#fff));
+      border: 3px solid #FFF;
+      font: 14px/16px "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif; 
+      color: #888;
+      font-weight: normal;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.02em;
+      text-shadow: #FFF 0 2px 0px;
+      text-decoration: none;
+      padding: 8px 16px;
+      margin: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 5px 12px 2px #B1B2BA;
+      
+      &:hover {
+        background: -webkit-gradient(linear, left top, left bottom, from(#f1f1f1), to(#fbfbfb));
+        border: 3px solid #FFF;
+        color: #666;
+        text-shadow: #fff 0 1px 0px;
+      }
+    }
+
     &.visible {
       display: block;
     }
     &.hidden {
       display: none;
-    }    
-  } 
+    }
+  }
 }
 
 #chat, #name-prompt {
