@@ -3,6 +3,28 @@ Messages = new Meteor.Collection("messages")
 if (Meteor.is_client)
   window.Messages = Messages
   
+  create_new_message = ->
+    Messages.insert({
+      name: Session.get("my_name"),
+      incomplete: true, time: Date.now()
+    })
+  
+  Template.name_prompt.class_visible = ->
+    if Session.get("my_name") then " hidden" else " visible"
+   
+  Template.name_prompt.events = {
+    'keydown input': (event) ->
+      code = if event.keyCode then event.keyCode else event.which
+      if (code == 13) # Enter was pressed
+        input = $(event.target)
+        Session.set("my_name", input.val())
+        if not Messages.find({name: Session.get("my_name"), incomplete: true}).count()
+          create_new_message()
+  }
+  
+  Template.chat.class_visible = ->
+    if Session.get("my_name") then " visible" else " hidden"
+  
   Template.chat.messages = ->
     Messages.find({}, {sort: {time:1}})
   
@@ -42,10 +64,7 @@ if (Meteor.is_client)
         Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
         
         # Create new incomplete message
-        Messages.insert({
-          name: Session.get("my_name"),
-          incomplete: true, time: Date.now()
-        })
+        create_new_message()
         
         # Focus on new message after it has been rendered
         delay 50, ->
@@ -56,7 +75,6 @@ if (Meteor.is_client)
       Messages.update(this._id, {$set: {text: input.val()}})
   }
   
-  Session.set("my_name", "john") # for debugging
   focus_editable()
 
 

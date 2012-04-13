@@ -5,11 +5,19 @@
 <body>
   <div id="container">
     {{> chat}}
+    {{> name_prompt}}
   </div>
 </body>
 
+<template name="name_prompt">
+  <div id="name-prompt" class={{class_visible}}>
+    <span class="label">My name is</span>
+    <span class="input"><input type="text"></input></span>
+  </div>
+</template>
+
 <template name="chat">
-  <div id="chat">
+  <div id="chat" class={{class_visible}}>
     {{#each messages}}
       {{> message}} 
     {{/each}}
