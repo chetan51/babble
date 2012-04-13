@@ -17,12 +17,15 @@
 </template>
 
 <template name="message">
-  <div class="message{{complete}}">
-    <span class="name">{{name}}</span>:
-    {{#if editing}}
-      <input class="text" type="text" value="{{text}}"></input>
-    {{else}}
-      <span class="text">{{text}}</span>
-    {{/if}}
+  <div class="message{{incomplete}}{{which_side}}{{color}}">
+    <div class="name">{{name}}</div>
+    <div class="content">
+      {{#if editing}}
+        <input class="text" type="text" value="{{text}}"></input>
+      {{else}}
+        <span class="text">{{text}}</span>
+      {{/if}}
+    </div>
+    <div class="time">{{time}}</div>
   </div>
 </template>

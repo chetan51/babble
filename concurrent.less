@@ -5,7 +5,7 @@ body {
 }
 
 #container {
-  background: #eee;
+  background: #E1E5EC;
   width: 600px;
   margin: 30px auto;
   padding: 15px;
@@ -13,6 +13,87 @@ body {
   box-shadow: 0 0 10px #333;
 }
 
-.message.complete {
-  color: blue;
+.message {
+  .name, .time {
+    font-size: 12px;
+  }
+  
+  .name {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .time {
+    color: #777;
+  }    
+
+  .content {
+    border-radius: 3px;
+    box-shadow: inset 0 0 3px #444;
+    padding: 5px;
+    margin: 1px;
+    
+    &, input {
+      font-size: 14px;
+      color: #333;
+    }
+    
+    input {
+      width: 100%;
+      background: transparent;
+      border: 0;
+    }
+  }
+  
+  margin-bottom: 5px;
+  width: 85%;
+  
+  &.incomplete {
+    .content {
+      background: -webkit-gradient(linear, left top, left bottom, from(#ddd), to(#eee));
+      border: 1px dashed #444;
+      box-shadow: none;
+    }
+  }
+  
+  &.left {
+    .name, .time {
+      text-align: left;
+      margin-left: 2px;
+    }
+    
+    margin-right: auto;
+  }
+  &.right {
+    .name, .time {
+      text-align: right;
+      margin-right: 2px;
+    }
+    
+    margin-left: auto;
+  }
+  
+  &.grey {
+    .content {
+      background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ddd));
+    }
+    
+    &.incomplete {
+      .content {
+        background: -webkit-gradient(linear, left top, left bottom, from(#ddd), to(#eee));
+      }
+    }
+  }
+  
+  &.blue {
+    .content {
+      background: -webkit-gradient(linear, left top, left bottom, from(#A3D2F1), to(#92C1F0));
+    }
+    
+    &.incomplete {
+      .content {
+        background: -webkit-gradient(linear, left top, left bottom, from(#92C1F0), to(#A3D2F1));
+      }
+    }
+  }
 }
