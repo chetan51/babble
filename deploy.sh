@@ -8,4 +8,6 @@ rm -r bundle
 cd ../babble-deploy
 git checkout -- server/server.js
 rm -r server/node_modules/fibers
+git add -A
+git commit -m "Redeploy"
 git push heroku master
