@@ -32,7 +32,7 @@ if (Meteor.is_client)
     })
   
   Template.login.class_visible = ->
-    if Session.get("my_name") then "hidden" else "visible"
+    if Session.get("current_chat_name") and Session.get("my_name") then "hidden" else "visible"
     
   Template.login.class_buttons_visible = ->
     if Session.get("current_chat_name") then "hidden" else "visible"
@@ -89,7 +89,7 @@ if (Meteor.is_client)
   }
   
   Template.chat.class_visible = ->
-    if Session.get("my_name") then "visible" else "hidden"
+    if Session.get("current_chat_name") and Session.get("my_name") then "visible" else "hidden"
   
   Template.chat.messages = ->
     Messages.find({chat: Session.get("current_chat_name")}, {sort: {time:1}})
