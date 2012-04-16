@@ -1,6 +1,13 @@
 # Models
 Messages = new Meteor.Collection("messages")
 
+# Methods
+create_editable_message = (chat_name, my_name) ->
+  Messages.insert({
+    name: my_name
+    incomplete: true, time: Date.now(), chat: chat_name
+  })
+
 # Client
 if (Meteor.is_client)
   window.Messages = Messages
@@ -16,20 +23,6 @@ if (Meteor.is_client)
 
   Meteor.startup ->
     focus_login()
-  
-  ensure_instructional_message = ->
-    if (Messages.find({chat: Session.get("current_chat_name")}).count() == 0)
-      Messages.insert({
-        name: "babble",
-        text: "hey! welcome to real-time chat. share the link to this page to a friend, and when they join, you'll be able to see each other typing. have fun!",
-        incomplete: false, time: Date.now() - 10, chat: Session.get("current_chat_name")
-      })
-
-  create_new_message = ->
-    Messages.insert({
-      name: Session.get("my_name"),
-      incomplete: true, time: Date.now(), chat: Session.get("current_chat_name")
-    })
   
   Template.login.class_visible = ->
     if Session.get("current_chat_name") and Session.get("my_name") then "hidden" else "visible"
@@ -48,27 +41,20 @@ if (Meteor.is_client)
 
   update_url = (chat_name) ->
     window.history.pushState(null, null, "/" + chat_name);
-    
-  ensure_editable_message = ->
-    if Session.get("current_chat_name") and Session.get("my_name")
-      if not Messages.find({
-        name: Session.get("my_name"),
-        incomplete: true,
-        chat: Session.get("current_chat_name")
-      }).count()
-        create_new_message()
-       
-      #Focus on editable message after it has been rendered
-      delay 50, ->
-        focus_editable()
-
+  
   join_chat = (chat_name) ->
     update_name()
     update_current_chat(chat_name)
     update_url(chat_name)
-    ensure_instructional_message()
-    ensure_editable_message()
+    join_current_chat()
 
+  join_current_chat = ->
+    if Session.get("current_chat_name") and Session.get("my_name")
+      Meteor.call "join_chat", Session.get("current_chat_name"), Session.get("my_name"), (error, result) ->
+        # Wait until render is complete
+        delay 500, ->
+          $("#editable textarea").focus()
+    
   Template.login.events = {
     'click .public': (event) ->
       chat_name = "public"
@@ -84,8 +70,7 @@ if (Meteor.is_client)
       
       if (code == 13) # Enter was pressed
         update_name()
-        ensure_instructional_message()
-        ensure_editable_message()
+        join_current_chat()
   }
   
   Template.chat.class_visible = ->
@@ -135,8 +120,7 @@ if (Meteor.is_client)
         # Mark message as complete
         Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
         
-        # Create new incomplete message
-        create_new_message()
+        create_editable_message Session.get("current_chat_name"), Session.get("my_name")
         
         updated = true
       else if input.val().length == 0
@@ -153,6 +137,28 @@ if (Meteor.is_client)
       input = $(event.target)
       Messages.update(this._id, {$set: {text: input.val()}})
   }
+
+# Server
+if (Meteor.is_server)
+  Meteor.methods({
+    join_chat: (chat_name, my_name) ->
+      # Add instructional message if necessary
+      if (Messages.find({chat: chat_name}).count() == 0)
+        Messages.insert({
+          name: "babble",
+          text: "hey! welcome to real-time chat. share the link to this page to a friend, and when they join, you'll be able to see each other typing. have fun!",
+          incomplete: false, time: Date.now() - 10, chat: chat_name
+        })
+        
+      # Make sure the user has an editable message
+      if not Messages.find({
+        name: my_name,
+        incomplete: true,
+        chat: chat_name
+      }).count()
+        create_editable_message chat_name, my_name
+  })
+
 
 # Helpers
 delay = (time, fn) ->
