@@ -9,13 +9,13 @@ if (Meteor.is_client)
     chat_name = location.pathname.substr(1) # get rid of leading /
     update_current_chat(chat_name)
     delay 50, ->
-      focus_name_prompt()
+      focus_login()
   
-  focus_name_prompt = ->
+  focus_login = ->
     $("#name-prompt input").focus()
 
   Meteor.startup ->
-    focus_name_prompt()
+    focus_login()
   
   ensure_instructional_message = ->
     if (Messages.find({chat: Session.get("current_chat_name")}).count() == 0)
@@ -31,10 +31,10 @@ if (Meteor.is_client)
       incomplete: true, time: Date.now(), chat: Session.get("current_chat_name")
     })
   
-  Template.name_prompt.class_visible = ->
+  Template.login.class_visible = ->
     if Session.get("my_name") then "hidden" else "visible"
     
-  Template.name_prompt.class_buttons_visible = ->
+  Template.login.class_buttons_visible = ->
     if Session.get("current_chat_name") then "hidden" else "visible"
    
   update_name = ->
@@ -69,7 +69,7 @@ if (Meteor.is_client)
     ensure_instructional_message()
     ensure_editable_message()
 
-  Template.name_prompt.events = {
+  Template.login.events = {
     'click .public': (event) ->
       chat_name = "public"
       join_chat(chat_name)
