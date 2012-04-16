@@ -12,7 +12,7 @@ if (Meteor.is_client)
       focus_login()
   
   focus_login = ->
-    $("#name-prompt input").focus()
+    $("#login input[type='text']").focus()
 
   Meteor.startup ->
     focus_login()
@@ -38,7 +38,7 @@ if (Meteor.is_client)
     if Session.get("current_chat_name") then "hidden" else "visible"
    
   update_name = ->
-    my_name = $("#name-prompt input[type='text']").val()
+    my_name = $("#login input[type='text']").val()
     if my_name.length
       Session.set("my_name", my_name)
    

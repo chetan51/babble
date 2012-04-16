@@ -5,61 +5,80 @@ body {
   font-family: Helvetica, sans-serif;
 }
 
-#container {
-  background: #E1E5EC;
-  width: 600px;
-  margin: 30px auto;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px #333;
-}
-
 #login {
   text-align: center;
-  font-size: 24px;
+  margin-top: 100px;
+  color: #eee;
+  text-shadow: #000 0 2px 0px;
   
-  input[type="text"] {
-    background: transparent;
-    border: 0;
-    border-bottom: 1px solid #555;
-    resize: none;
-    outline: none;
-    font-size: inherit;
-    font: inherit;
-    width: 150px;
+  .name {
+    font-family: 'Lobster', cursive;
+    font-size: 34px;
+    
+    input[type="text"] {
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid #ccc;
+      resize: none;
+      outline: none;
+      font-size: inherit;
+      font: inherit;
+      color: inherit;
+      width: 150px;
+    }
   }
   
   .buttons {
-    margin-top: 20px;
+    margin-top: 40px;
+    color: #ccc;
     
     .label {
       font-size: 16px;
+      margin-bottom: 10px;
     }
     
+    .button-container {
+      display: inline-block;
+      height: 70px;
+      width: 150px;
+      background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff));
+      border-radius: 3px;
+      margin: 10px;
+      box-shadow: inset 0 0 1px 1px #111;
+    }
+  
     button {
-      background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#fff));
+      margin-top: 15px;
+      background: -webkit-gradient(linear, left top, left bottom, from(#ddd), to(#fff));
       border: 3px solid #FFF;
       font: 14px/16px "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif; 
-      color: #888;
+      color: #666;
       font-weight: normal;
       -webkit-font-smoothing: antialiased;
       letter-spacing: -0.02em;
       text-shadow: #FFF 0 2px 0px;
       text-decoration: none;
       padding: 8px 16px;
-      margin: 10px;
       border-radius: 4px;
       cursor: pointer;
-      box-shadow: 0 5px 12px 2px #B1B2BA;
+      box-shadow: 0 5px 12px 2px #555;
       
       &:hover {
-        background: -webkit-gradient(linear, left top, left bottom, from(#f1f1f1), to(#fbfbfb));
         border: 3px solid #FFF;
-        color: #666;
+        color: #333;
         text-shadow: #fff 0 1px 0px;
       }
     }
   }
+}
+
+#chat {
+  background: #E1E5EC;
+  width: 600px;
+  margin: 30px auto;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #333;
 }
 
 .message {

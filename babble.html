@@ -2,6 +2,7 @@
   <title>babble IM: watch-as-i-type chat</title>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -13,12 +14,18 @@
 
 <template name="login">
   <div id="login" class={{class_visible}}>
-    <span class="label">My name is</span>
-    <span class="input"><input type="text"></input></span>
+    <div class="name">
+      <span class="label">My name is</span>
+      <span class="input"><input type="text"></input></span>
+    </div>
 		<div class="buttons {{class_buttons_visible}}">
-			<div class="label">and I want to join a</div>
-			<button class="public">Public Chat</button>
-			<button class="private">Private Chat</button>
+			<div class="label">and I want a</div>
+      <span class="button-container">
+        <button class="public">Public Chat</button>
+      </span>
+      <span class="button-container">
+        <button class="private">Private Chat</button>
+      </span>
 		</div>
   </div>
 </template>
