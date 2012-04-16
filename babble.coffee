@@ -168,3 +168,14 @@ uniqueID = (length=8) ->
   id = ""
   id += Math.random().toString(36).substr(2) while id.length < length
   id.substr 0, length
+
+# For differently-colored messages
+String.prototype.hashCode = ->
+  hash = 0
+  if (this.length == 0)
+    return hash
+  for i in [0..this.length - 1]
+    char = this.charCodeAt(i)
+    hash = ((hash<<5)-hash) + char
+    hash = hash & hash # Convert to 32-bit integer
+  return hash
