@@ -1,7 +1,7 @@
 # Models
 Messages = new Meteor.Collection("messages")
 
-# Methods
+# Shared Methods
 create_editable_message = (chat_name, my_name) ->
   Messages.insert({
     name: my_name
@@ -10,26 +10,13 @@ create_editable_message = (chat_name, my_name) ->
 
 # Client
 if (Meteor.is_client)
+  # For debugging
   window.Messages = Messages
   
-  $(window).bind "popstate", (event) ->
-    chat_name = location.pathname.substr(1) # get rid of leading /
-    update_current_chat(chat_name)
-    delay 50, ->
-      focus_login()
-  
+  # Methods
   focus_login = ->
     $("#login input[type='text']").focus()
-
-  Meteor.startup ->
-    focus_login()
   
-  Template.login.class_visible = ->
-    if Session.get("current_chat_name") and Session.get("my_name") then "hidden" else "visible"
-    
-  Template.login.class_buttons_visible = ->
-    if Session.get("current_chat_name") then "hidden" else "visible"
-   
   update_name = ->
     my_name = $("#login input[type='text']").val()
     if my_name.length
@@ -54,7 +41,33 @@ if (Meteor.is_client)
         # Wait until render is complete
         delay 500, ->
           $("#editable textarea").focus()
+          
+  is_mine = (message) ->
+    message.name == Session.get("my_name")
     
+  is_editable = (message) ->
+    is_mine(message) and message.incomplete
+   
+  focus_editable = ->
+    $("#editable textarea").focus()
+
+  # Events
+  $(window).bind "popstate", (event) ->
+    chat_name = location.pathname.substr(1) # get rid of leading /
+    update_current_chat(chat_name)
+    delay 50, ->
+      focus_login()
+  
+  Meteor.startup ->
+    focus_login()
+  
+  # Login
+  Template.login.class_visible = ->
+    if Session.get("current_chat_name") and Session.get("my_name") then "hidden" else "visible"
+    
+  Template.login.class_buttons_visible = ->
+    if Session.get("current_chat_name") then "hidden" else "visible"
+   
   Template.login.events = {
     'click .public': (event) ->
       chat_name = "public"
@@ -73,21 +86,14 @@ if (Meteor.is_client)
         join_current_chat()
   }
   
+  # Chat
   Template.chat.class_visible = ->
     if Session.get("current_chat_name") and Session.get("my_name") then "visible" else "hidden"
   
   Template.chat.messages = ->
     Messages.find({chat: Session.get("current_chat_name")}, {sort: {time:1}})
   
-  is_mine = (message) ->
-    message.name == Session.get("my_name")
-    
-  is_editable = (message) ->
-    is_mine(message) and message.incomplete
-   
-  focus_editable = ->
-    $("#editable textarea").focus()
-
+  # Messages
   Template.message.editable = ->
     is_editable(this)
   
