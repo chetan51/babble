@@ -98,7 +98,7 @@ if (Meteor.is_client)
     is_editable(this)
   
   Template.message.id_editable = ->
-    if is_editable(this) then "editable" else ''
+    if is_editable(this) then "id=editable" else ''
   
   Template.message.class_incomplete = ->
     if this.incomplete then "incomplete" else ''

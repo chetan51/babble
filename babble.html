@@ -60,13 +60,12 @@
 </template>
 
 <template name="message">
-  <div
+  <div {{id_editable}}
     class="message
       {{class_incomplete}}
       {{class_empty}}
       {{class_side}}
-      {{class_color}}"
-    id="{{id_editable}}">
+      {{class_color}}">
     <div class="name">{{name}}</div>
     <div class="content">
       {{#if editable}}
