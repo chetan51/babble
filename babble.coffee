@@ -112,6 +112,9 @@ if (Meteor.is_client)
   Template.message.class_incomplete = ->
     if this.incomplete then "incomplete" else ''
   
+  Template.message.class_empty = ->
+    if (not is_editable(this) and (not this.text or not this.text.length)) then "empty" else ''
+  
   Template.message.class_side = ->
     if is_mine(this) then "right" else "left"
     
