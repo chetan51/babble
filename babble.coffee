@@ -140,6 +140,7 @@ if (Meteor.is_client)
           focus_editable()
       
     'keyup textarea': (event) ->
+      Meteor.flush() # Keep the DOM updating even while the user is typing
       input = $(event.target)
       Messages.update(this._id, {$set: {text: input.val()}})
   }
