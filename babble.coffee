@@ -114,6 +114,11 @@ if (Meteor.is_client)
     
   Template.message.events = {
     'keydown textarea': (event) ->
+      code = if event.keyCode then event.keyCode else event.which
+      if (code == 13) # Enter was pressed
+        event.preventDefault()
+
+    'keyup textarea': (event) ->
       input = $(event.target)
       code = if event.keyCode then event.keyCode else event.which
       updated = false
@@ -129,16 +134,16 @@ if (Meteor.is_client)
           # This is the first character, so update the timestamp
           Messages.update(this._id, {$set: {time: Date.now()}})
           updated = true
+      else
+        # New character typed
+        Meteor.flush() # Keep the DOM updating even while the user is typing
+        input = $(event.target)
+        Messages.update(this._id, {$set: {text: input.val()}})
       
       if updated
         # Focus on new message after it has been rendered
         delay 50, ->
           focus_editable()
-      
-    'keyup textarea': (event) ->
-      Meteor.flush() # Keep the DOM updating even while the user is typing
-      input = $(event.target)
-      Messages.update(this._id, {$set: {text: input.val()}})
   }
 
 # Server
