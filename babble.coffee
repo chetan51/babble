@@ -112,10 +112,6 @@ if (Meteor.is_client)
   Template.message.class_color = ->
     if is_mine(this) then "grey" else "blue"
     
-  Template.message.timestamp = ->
-    d = new Date(this.time)
-    d.toTimeString()
-   
   Template.message.events = {
     'keydown textarea': (event) ->
       input = $(event.target)
