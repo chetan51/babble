@@ -124,12 +124,12 @@ if (Meteor.is_client)
       updated = false
       
       if (code == 13) # Enter was pressed
-        # Mark message as complete
-        Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
-        
-        create_editable_message Session.get("current_chat_name"), Session.get("my_name")
-        
-        updated = true
+        console.log this.text.length
+        if this.text.length
+          # Mark message as complete
+          Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
+          create_editable_message Session.get("current_chat_name"), Session.get("my_name")
+          updated = true
       else if input.val().length == 0
           # This is the first character, so update the timestamp
           Messages.update(this._id, {$set: {time: Date.now()}})
