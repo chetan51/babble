@@ -124,7 +124,6 @@ if (Meteor.is_client)
       updated = false
       
       if (code == 13) # Enter was pressed
-        console.log this.text.length
         if this.text.length
           # Mark message as complete
           Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
