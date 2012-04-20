@@ -130,7 +130,7 @@ if (Meteor.is_client)
           Messages.update(this._id, {$set: {incomplete: false, time: Date.now() - 1}})
           create_editable_message Session.get("current_chat_name"), Session.get("my_name")
           updated = true
-      else if input.val().length == 0
+      else if input.val().length == 1
           # This is the first character, so update the timestamp
           Messages.update(this._id, {$set: {time: Date.now()}})
           updated = true
